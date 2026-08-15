@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "PrepMind AI"
+description = "A production-quality AI-powered exam preparation companion with personalized exam plans, practice questions, guided lessons, doubt solving, and real-time progress tracking."
+version = "1.0.0"
+id = "artifacts/prep-mind-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22336
+
+[services.development]
+run = "pnpm --filter @workspace/prep-mind-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/prep-mind-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/prep-mind-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22336"
+BASE_PATH = "/"

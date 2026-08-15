@@ -1,0 +1,413 @@
+Build a production-quality AI-powered exam preparation web app called "PrepMind AI".
+
+IMPORTANT:
+The main application must be a SINGLE index.html file using only HTML, CSS, and vanilla JavaScript. Do not use React, Vue, Angular, Bootstrap, Tailwind, or other frontend frameworks.
+
+The app must be responsive, mobile friendly, modern, and professional.
+
+========================================
+LANDING PAGE
+========================================
+
+Create a landing page for "PrepMind AI".
+
+Heading:
+"Prepare Smarter. Score Higher."
+
+Subtitle:
+"Your AI-powered exam preparation companion."
+
+Include an exam input:
+"Enter your exam name — TCS NQT, CAT, GATE, SBI PO..."
+
+Button:
+"Start Preparing"
+
+The user can enter ANY exam name.
+
+Examples:
+TCS NQT
+CAT
+GATE
+SBI PO
+SSC CGL
+GRE
+GMAT
+IBPS PO
+
+When the user submits an exam:
+1. Save the exam name in JavaScript state.
+2. Show an animated loading screen.
+3. Call the AI.
+4. Generate exam-specific information.
+5. Open the dashboard.
+
+========================================
+LOADING SCREEN
+========================================
+
+Show:
+
+"Building your personalized preparation plan..."
+
+Animated steps:
+
+✓ Identifying exam pattern
+✓ Understanding syllabus
+✓ Analyzing difficulty
+✓ Creating preparation strategy
+✓ Preparing your AI study plan
+
+Use smooth animations.
+
+========================================
+DASHBOARD
+========================================
+
+Create 5 tabs:
+
+1. Overview
+2. Practice
+3. Teach Me
+4. Ask Doubt
+5. Progress
+
+Use a modern tab navigation system.
+
+========================================
+TAB 1 — OVERVIEW
+========================================
+
+Use Claude AI to generate information for the selected exam.
+
+Show:
+
+- Exam pattern
+- Difficulty
+- Important sections
+- Recommended preparation time
+- Preparation strategy
+- Time management strategy
+
+Show syllabus topics as clickable chips.
+
+When a syllabus topic is clicked:
+Open the Teach Me tab and select that topic.
+
+========================================
+TAB 2 — PRACTICE
+========================================
+
+Create:
+
+Topic filter
+Difficulty filter:
+- Easy
+- Medium
+- Hard
+
+Button:
+"Generate Question"
+
+Use Claude AI to generate a fresh MCQ specifically for:
+
+- Current exam
+- Selected topic
+- Selected difficulty
+
+Each question must contain:
+
+- Question
+- 4 options
+- Correct answer
+- Explanation
+- Shortcut trick
+
+Do not show the correct answer before the user answers.
+
+After the user selects an option:
+
+Correct:
+Show correct styling.
+
+Wrong:
+Show wrong styling and the correct answer.
+
+Then show:
+
+"AI Explanation"
+
+"Shortcut Trick"
+
+Add a "Next Question" button.
+
+Track:
+
+- Questions attempted
+- Correct answers
+- Wrong answers
+- Score
+- Accuracy
+- Topic performance
+- Difficulty performance
+
+========================================
+TAB 3 — TEACH ME
+========================================
+
+Show all syllabus topics as expandable cards.
+
+When a topic is opened, use Claude AI to teach it.
+
+Generate:
+
+1. Simple explanation
+2. Important concepts
+3. Formulas
+4. Shortcuts
+5. Solved examples
+6. Common mistakes
+7. Exam-specific tips
+
+Cache generated lessons in JavaScript state so the same lesson is not unnecessarily requested again during the session.
+
+========================================
+TAB 4 — ASK DOUBT
+========================================
+
+Create a complete AI chat interface.
+
+The AI must know the current exam and syllabus context.
+
+Support multi-turn conversation.
+
+User messages on the right.
+
+AI messages on the left.
+
+Input:
+"Ask your doubt..."
+
+Send button.
+
+Pressing Enter should send the message.
+
+Maintain chat history in JavaScript state.
+
+The AI should answer:
+
+- Concept doubts
+- Formula doubts
+- Question-solving doubts
+- Strategy questions
+- Time-management questions
+- Exam preparation questions
+
+========================================
+TAB 5 — PROGRESS
+========================================
+
+Show:
+
+- Overall score
+- Accuracy
+- Questions attempted
+- Correct answers
+- Wrong answers
+
+Show topic-wise performance.
+
+Show difficulty-wise performance.
+
+Show recent activity.
+
+Update all statistics in real time.
+
+========================================
+DESIGN
+========================================
+
+Background:
+#06060a
+
+Accent:
+#e8ff5a
+
+Use:
+
+Google Fonts:
+Clash Display
+Instrument Sans
+
+Design style:
+
+- Premium AI SaaS
+- Dark theme
+- Modern cards
+- Rounded corners
+- Subtle borders
+- Soft shadows
+- Smooth animations
+- Loading animations
+- Responsive mobile layout
+
+Do not make the design excessively neon.
+
+========================================
+JAVASCRIPT STATE
+========================================
+
+Store application state in JavaScript variables.
+
+Use an object similar to:
+
+const appState = {
+    examName: "",
+    examInfo: null,
+    syllabus: [],
+    currentTopic: "",
+    currentDifficulty: "Medium",
+    currentQuestion: null,
+    questionsAnswered: 0,
+    correctAnswers: 0,
+    wrongAnswers: 0,
+    score: 0,
+    topicStats: {},
+    difficultyStats: {
+        Easy: { attempted: 0, correct: 0 },
+        Medium: { attempted: 0, correct: 0 },
+        Hard: { attempted: 0, correct: 0 }
+    },
+    lessons: {},
+    chatHistory: []
+};
+
+========================================
+CLAUDE API
+========================================
+
+Use Anthropic Claude.
+
+API endpoint:
+
+https://api.anthropic.com/v1/messages
+
+Model:
+
+claude-sonnet-4-20250514
+
+IMPORTANT SECURITY REQUIREMENT:
+
+DO NOT put the Anthropic API key anywhere in index.html or frontend JavaScript.
+
+DO NOT expose the API key to the browser.
+
+The main frontend must use fetch() to call:
+
+/api/claude
+
+Create a Vercel serverless function:
+
+/api/claude.js
+
+The serverless function must securely call:
+
+https://api.anthropic.com/v1/messages
+
+using:
+
+process.env.ANTHROPIC_API_KEY
+
+The API key must only exist as an environment variable.
+
+The frontend must NEVER contain:
+
+ANTHROPIC_API_KEY
+the actual API key
+or any hardcoded secret.
+
+The serverless function should:
+
+1. Receive the frontend request.
+2. Validate the request.
+3. Call Anthropic Claude.
+4. Use model claude-sonnet-4-20250514.
+5. Return the AI response to the frontend.
+6. Handle API errors safely.
+7. Never expose the API key.
+
+Use fetch() for all frontend communication with /api/claude.
+
+The main UI, CSS, and frontend JavaScript must remain inside index.html.
+
+========================================
+PROJECT FILES
+========================================
+
+Create:
+
+index.html
+api/claude.js
+package.json
+vercel.json
+README.md
+
+Do not create unnecessary files or frameworks.
+
+========================================
+SECURITY
+========================================
+
+Never expose API keys.
+
+Never put secrets in client-side JavaScript.
+
+Never commit secrets to GitHub.
+
+Do not create fake API keys.
+
+Use process.env.ANTHROPIC_API_KEY on the server side.
+
+========================================
+ERROR HANDLING
+========================================
+
+Handle:
+
+- Empty exam name
+- Network errors
+- Claude API errors
+- Invalid AI responses
+- Missing environment variable
+- Invalid JSON
+- Empty responses
+
+Show friendly messages to users.
+
+Do not expose internal server errors.
+
+========================================
+FINAL TEST
+========================================
+
+Before finishing, test:
+
+1. Landing page
+2. Exam input
+3. Loading animation
+4. Overview
+5. Practice
+6. Answer checking
+7. AI explanation
+8. Teach Me
+9. Ask Doubt
+10. Multi-turn chat
+11. Progress
+12. Mobile layout
+13. API error handling
+
+Make sure there are no console errors.
+
+Make sure the Anthropic API key is NOT present anywhere in frontend code.
+
+The project must be ready to push to GitHub and deploy directly to Vercel.
