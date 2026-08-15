@@ -3,31 +3,14 @@ import { defineConfig, type Plugin } from 'vite';
 
 import claudeHandler from './api/claude.js';
 
-const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    'PORT environment variable is required but was not provided.',
-  );
-}
-
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
-  throw new Error(
-    'BASE_PATH environment variable is required but was not provided.',
-  );
-}
+const port = Number(process.env.PORT || '5173');
+const basePath = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   base: basePath,
+
   plugins: [claudeApiPlugin()],
+
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, 'src'),
@@ -40,20 +23,24 @@ export default defineConfig({
     },
     dedupe: ['react', 'react-dom'],
   },
+
   root: path.resolve(import.meta.dirname),
+
   build: {
     outDir: path.resolve(import.meta.dirname, 'dist/public'),
     emptyOutDir: true,
   },
+
   server: {
     port,
-    strictPort: true,
+    strictPort: false,
     host: '0.0.0.0',
     allowedHosts: true,
     fs: {
       strict: true,
     },
   },
+
   preview: {
     port,
     host: '0.0.0.0',
@@ -64,6 +51,7 @@ export default defineConfig({
 function claudeApiPlugin(): Plugin {
   return {
     name: 'prep-mind-claude-api',
+
     configureServer(server) {
       server.middlewares.use('/api/claude', async (req, res, next) => {
         if (req.method !== 'POST') {
@@ -71,20 +59,30 @@ function claudeApiPlugin(): Plugin {
         }
 
         let rawBody = '';
+
         req.on('data', (chunk) => {
           rawBody += chunk;
+
           if (rawBody.length > 256_000) {
             req.destroy();
           }
         });
+
         req.on('end', async () => {
           try {
             req.body = rawBody ? JSON.parse(rawBody) : undefined;
             await claudeHandler(req, res);
           } catch {
             res.statusCode = 400;
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
-            res.end(JSON.stringify({ error: 'Invalid request body.' }));
+            res.setHeader(
+              'Content-Type',
+              'application/json; charset=utf-8',
+            );
+            res.end(
+              JSON.stringify({
+                error: 'Invalid request body.',
+              }),
+            );
           }
         });
       });
