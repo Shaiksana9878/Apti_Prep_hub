@@ -1,6 +1,0 @@
-{
-  "installCommand": "pnpm install --ignore-scripts --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/prep-mind-ai run build",
-  "outputDirectory": "artifacts/prep-mind-ai/dist/public",
-  "framework": null
-}
