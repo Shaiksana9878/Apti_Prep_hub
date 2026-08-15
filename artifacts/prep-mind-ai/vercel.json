@@ -2,10 +2,5 @@
   "installCommand": "pnpm install --ignore-scripts --frozen-lockfile",
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist/public",
-  "framework": null,
-  "functions": {
-    "api/claude.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "framework": null
 }
