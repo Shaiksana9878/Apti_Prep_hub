@@ -1,24 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>PrepMind AI</title>
-    <meta name="description" content="PrepMind AI — built on Replit. Update this description to reflect the app." />
-    <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="PrepMind AI" />
-    <meta property="og:description" content="PrepMind AI — built on Replit. Update this description to reflect the app." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PrepMind AI" />
-    <meta name="twitter:description" content="PrepMind AI — built on Replit. Update this description to reflect the app." />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PrepMind AI — your next right answer</title>
+  <meta name="description" content="PrepMind AI is a calm, focused study studio for any exam.">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #06060a;
+      --surface: #0d0e13;
+      --surface-2: #12141b;
+      --surface-3: #191b23;
+      --line: rgba(232,255,90,.13);
+      --line-strong: rgba(232,255,90,.28);
+      --text: #f0f1e8;
+      --muted: #9a9eaa;
+      --quiet: #686c79;
+      --acid: #e8ff5a;
+      --acid-2: #c8dc43;
+      --acid-ink: #151b03;
+      --coral: #ff8d7a;
+      --sky: #8dd9ff;
+      --violet: #afa4ff;
+      --display: "Clash Display", "Arial Narrow", sans-serif;
+      --sans: "Instrument Sans", "Trebuchet MS", sans-serif;
+      --shadow: 0 24px 70px rgba(0,0,0,.32);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--ink); scroll-behavior: smooth; }
+    body { margin: 0; min-height: 100dvh; background: var(--ink); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+    body:before { content:""; position: fixed; z-index: -1; inset: 0; pointer-events:none; opacity:.25; background-image: radial-gradient(rgba(255,255,255,.08) .6px, transparent .7px); background-size: 5px 5px; mask-image: linear-gradient(to bottom, #000, transparent 80%); }
+    button, input, textarea { font: inherit; }
+    button { cursor:pointer; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex="0"]:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
+    .shell { min-height:100dvh; }
+    .hidden { display:none !important; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .icon { width:18px; height:18px; display:inline-block; vertical-align:middle; flex:0 0 auto; }
+    .icon-sm { width:15px; height:15px; }
+    .eyebrow { color:var(--acid); font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    .muted { color:var(--muted); }
+    .quiet { color:var(--quiet); }
+    .accent { color:var(--acid); }
+    .display { font-family:var(--display); letter-spacing:-.04em; }
+    .btn { border:1px solid transparent; display:inline-flex; align-items:center; justify-content:center; gap:9px; min-height:44px; border-radius:12px; padding:0 17px; color:var(--text); background:var(--surface-3); transition:transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease; }
+    .btn:hover { transform:translateY(-2px); border-color:var(--line-strong); background:#21242d; }
+    .btn:active { transform:translateY(0); }
+    .btn-primary { color:var(--acid-ink); background:var(--acid); font-weight:700; box-shadow:0 9px 30px rgba(232,255,90,.12); }
+    .btn-primary:hover { color:var(--acid-ink); background:#f1ff83; border-color:transparent; }
+    .btn-ghost { background:transparent; border-color:var(--line); }
+    .btn-block { width:100%; }
+    .pill { display:inline-flex; align-items:center; gap:7px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:12px; white-space:nowrap; }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--acid); display:inline-block; box-shadow:0 0 0 4px rgba(232,255,90,.08); }
+    
+    /* landing */
+    .landing { min-height:100dvh; overflow:hidden; position:relative; }
+    .landing:after { content:""; position:absolute; width:700px; height:700px; top:-280px; right:-200px; border-radius:50%; background:radial-gradient(circle, rgba(232,255,90,.09), transparent 67%); pointer-events:none; }
+    .land-nav { max-width:1250px; margin:auto; padding:26px 34px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
+    .brand { color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:10px; font-family:var(--display); font-weight:600; font-size:19px; letter-spacing:-.035em; }
+    .brand-mark { display:grid; place-items:center; width:28px; height:28px; color:var(--acid-ink); background:var(--acid); border-radius:9px 9px 9px 3px; }
+    .brand-mark svg { width:17px; height:17px; }
+    .land-nav-note { font-size:12px; color:var(--quiet); }
+    .hero { max-width:1250px; min-height:700px; margin:auto; padding:70px 34px 80px; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr); gap:80px; align-items:center; position:relative; }
+    .hero-copy { position:relative; z-index:1; animation:rise .65s both; }
+    .hero h1 { font-size:clamp(54px,7.1vw,104px); line-height:.91; margin:20px 0 26px; max-width:790px; font-weight:500; }
+    .hero h1 em { color:var(--acid); font-style:normal; }
+    .hero-sub { max-width:490px; font-size:18px; line-height:1.55; color:var(--muted); margin:0 0 37px; }
+    .exam-form { width:min(500px,100%); }
+    .input-wrap { display:flex; align-items:center; gap:11px; min-height:62px; padding:7px 8px 7px 18px; background:rgba(18,20,27,.84); border:1px solid rgba(232,255,90,.25); border-radius:15px; box-shadow:0 18px 45px rgba(0,0,0,.28); transition:border-color .2s, box-shadow .2s; }
+    .input-wrap:focus-within { border-color:var(--acid); box-shadow:0 0 0 4px rgba(232,255,90,.08), 0 18px 45px rgba(0,0,0,.28); }
+    .input-wrap input { width:100%; min-width:0; border:0; outline:0; color:var(--text); background:transparent; font-size:15px; }
+    .input-wrap input::placeholder { color:#707583; }
+    .input-wrap .btn { min-height:46px; padding:0 15px; }
+    .form-error { color:var(--coral); font-size:12px; margin:10px 4px 0; min-height:18px; }
+    .hero-proof { display:flex; align-items:center; gap:12px; margin-top:24px; font-size:12px; color:var(--quiet); }
+    .avatar-stack { display:flex; padding-left:8px; }
+    .avatar-stack span { width:25px; height:25px; margin-left:-8px; border:2px solid var(--ink); border-radius:50%; display:grid; place-items:center; font-size:9px; font-weight:700; color:var(--ink); }
+    .avatar-stack span:nth-child(1){background:#f6c4a6}.avatar-stack span:nth-child(2){background:#9cc5ff}.avatar-stack span:nth-child(3){background:#d8b4ff}.avatar-stack span:nth-child(4){background:var(--acid)}
+    .hero-art { min-height:460px; position:relative; display:grid; place-items:center; animation:rise .7s .1s both; }
+    .orbit { width:min(410px,80vw); aspect-ratio:1; border:1px solid rgba(232,255,90,.18); border-radius:50%; position:relative; transform:rotate(-14deg); }
+    .orbit:before,.orbit:after { content:""; position:absolute; inset:35px; border:1px solid rgba(232,255,90,.1); border-radius:50%; }
+    .orbit:after { inset:74px; border-color:rgba(232,255,90,.08); }
+    .orbit-line { position:absolute; width:140%; height:1px; top:50%; left:-20%; background:linear-gradient(90deg, transparent, var(--acid), transparent); opacity:.5; transform:rotate(62deg); }
+    .core { width:180px; aspect-ratio:1; display:grid; place-items:center; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 36% 28%, #edff86, #b1c337 32%, #4b5419 73%, #262b0d); box-shadow:0 0 0 16px rgba(232,255,90,.045), 0 30px 100px rgba(232,255,90,.18); }
+    .core svg { width:70px; height:70px; color:var(--acid-ink); }
+    .orbit-tag { position:absolute; padding:10px 13px; border:1px solid var(--line); border-radius:12px; color:var(--text); background:rgba(18,20,27,.88); box-shadow:var(--shadow); font-size:12px; backdrop-filter:blur(10px); }
+    .orbit-tag strong { display:block; color:var(--acid); font-size:14px; font-family:var(--display); letter-spacing:-.02em; }
+    .tag-a { top:21%; left:-4%; }.tag-b { right:-8%; top:37%; }.tag-c { bottom:13%; left:6%; }
+    .land-bottom { max-width:1250px; margin:auto; padding:0 34px 45px; display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,.08); }
+    .land-feature { padding:24px 24px 0 0; border-right:1px solid rgba(255,255,255,.08); }
+    .land-feature:not(:first-child){padding-left:24px}.land-feature:last-child{border-right:0}
+    .land-feature h3 { margin:11px 0 5px; font-size:15px; font-weight:600; }.land-feature p { color:var(--quiet); font-size:13px; margin:0; max-width:240px; }
+    .feature-num { color:var(--acid); font-family:var(--display); font-size:13px; }
+    
+    /* building */
+    .building { min-height:100dvh; display:grid; place-items:center; padding:30px; position:relative; overflow:hidden; }
+    .building:before { content:""; position:absolute; width:800px;height:800px;border:1px solid rgba(232,255,90,.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%); box-shadow:0 0 0 120px rgba(232,255,90,.015),0 0 0 240px rgba(232,255,90,.012); }
+    .build-card { width:min(580px,100%); position:relative; z-index:1; }
+    .build-head { text-align:center; margin-bottom:46px; }.build-head .brand{justify-content:center;margin-bottom:52px}.build-head h1{font-size:clamp(36px,6vw,59px);line-height:.98;font-weight:500;margin:17px 0 13px}.build-head p{color:var(--muted);margin:0}
+    .step-list { display:grid; gap:11px; }
+    .build-step { display:flex; align-items:center; gap:15px; border:1px solid var(--line); background:rgba(13,14,19,.8); padding:16px 18px; border-radius:15px; opacity:.35; transform:translateY(8px); transition:opacity .4s, transform .4s, border-color .4s, background .4s; }
+    .build-step.active { opacity:1; transform:translateY(0); border-color:var(--line-strong); background:rgba(25,28,29,.94); }.build-step.done{opacity:.68;transform:translateY(0)}
+    .step-icon { width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:var(--quiet);background:#181a20; }.active .step-icon{color:var(--acid);background:rgba(232,255,90,.1)}.done .step-icon{color:var(--acid)}
+    .step-text strong{display:block;font-size:14px;font-weight:600}.step-text span{display:block;color:var(--quiet);font-size:12px;margin-top:1px}
+    .step-check { margin-left:auto; color:var(--acid); opacity:0; }.done .step-check{opacity:1}
+    .build-note { text-align:center; color:var(--quiet); font-size:12px; margin:25px 0 0; }
+    
+    /* app shell */
+    .app-shell { min-height:100dvh; display:grid; grid-template-columns:235px minmax(0,1fr); }
+    .sidebar { border-right:1px solid rgba(255,255,255,.08); background:rgba(10,11,15,.88); padding:25px 15px; display:flex; flex-direction:column; position:sticky; top:0; height:100dvh; }
+    .sidebar .brand { padding:0 11px 34px; }.sidebar .brand-mark{width:26px;height:26px;border-radius:8px 8px 8px 3px}
+    .side-label { font-size:10px; color:var(--quiet); text-transform:uppercase; letter-spacing:.14em; padding:0 12px; margin:0 0 10px; }
+    .side-nav { display:grid; gap:4px; }.nav-btn { border:1px solid transparent; color:var(--muted); background:transparent; display:flex; gap:12px; align-items:center; width:100%; padding:11px 12px; border-radius:11px; text-align:left; transition:color .2s,background .2s,border-color .2s; }.nav-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}.nav-btn.active{color:var(--acid);background:rgba(232,255,90,.08);border-color:rgba(232,255,90,.14)}.nav-btn small{margin-left:auto;color:var(--quiet);font-size:10px}
+    .sidebar-bottom { margin-top:auto; border-top:1px solid rgba(255,255,255,.08); padding:18px 10px 2px; }.mini-profile{display:flex;align-items:center;gap:10px}.profile-orb{width:29px;height:29px;border-radius:10px;background:var(--acid);color:var(--acid-ink);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:12px}.mini-profile strong{font-size:12px;display:block}.mini-profile span{color:var(--quiet);font-size:11px}
+    .main-area { min-width:0; padding:0 clamp(18px,4vw,52px) 50px; }
+    .topbar { height:81px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:40px; }.mobile-menu{display:none}.top-context{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}.top-context .crumb{color:var(--text)}.top-right{display:flex;align-items:center;gap:17px}.offline-badge{color:var(--quiet);font-size:11px;display:flex;gap:7px;align-items:center}.offline-badge i{width:6px;height:6px;border-radius:50%;background:var(--acid);display:block}.help-btn{border:0;background:transparent;color:var(--muted);padding:7px}.main-content{max-width:1120px;margin:0 auto;animation:fadeIn .35s both}
+    .page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:29px}.page-heading h1{font-size:clamp(31px,4vw,48px);font-weight:500;line-height:1;margin:7px 0 0}.page-heading p{color:var(--muted);margin:9px 0 0;font-size:14px}.page-heading .heading-action{flex:0 0 auto}
+    .grid-overview{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(285px,.75fr);gap:17px}.card{background:linear-gradient(135deg,rgba(20,22,29,.96),rgba(13,14,19,.96));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:0 12px 32px rgba(0,0,0,.15)}.card-pad{padding:25px}.hero-card{min-height:260px;position:relative;overflow:hidden;background:linear-gradient(135deg,#20251b 0%,#151b12 43%,#101216 100%);border-color:rgba(232,255,90,.2)}.hero-card:after{content:"";position:absolute;width:300px;height:300px;right:-100px;top:-90px;border-radius:50%;border:1px solid rgba(232,255,90,.18);box-shadow:0 0 0 40px rgba(232,255,90,.035),0 0 0 80px rgba(232,255,90,.025)}.hero-card > *{position:relative;z-index:1}.hero-card h2{font-size:clamp(25px,3vw,38px);font-weight:500;line-height:1.02;max-width:530px;margin:13px 0 14px}.hero-card p{color:#b8bea9;max-width:500px;margin:0;font-size:14px}.hero-card-footer{display:flex;gap:10px;align-items:center;margin-top:28px}.hero-card-footer .pill{color:#c5cbad;border-color:rgba(232,255,90,.19)}
+    .side-stack{display:grid;gap:17px}.stat-card{padding:22px 23px;min-height:121px}.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.stat-value{font-family:var(--display);font-size:36px;letter-spacing:-.05em;line-height:1.1;margin-top:13px}.stat-value small{font-family:var(--sans);font-size:12px;color:var(--quiet);letter-spacing:0}.bar{height:6px;border-radius:9px;background:#23252c;overflow:hidden;margin-top:14px}.bar i{height:100%;display:block;border-radius:9px;background:var(--acid);transition:width .5s ease}.quick-card{padding:21px 23px;display:flex;align-items:center;justify-content:space-between;gap:15px}.quick-card p{margin:4px 0 0;color:var(--quiet);font-size:12px}.quick-card .icon-box{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;color:var(--acid);background:rgba(232,255,90,.08)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:36px 0 15px}.section-title h2{font-family:var(--display);font-size:21px;font-weight:500;letter-spacing:-.03em;margin:0}.section-title a,.text-btn{color:var(--acid);font-size:12px;background:none;border:0;padding:0}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.info-card{padding:22px 24px}.info-card h3{font-size:14px;margin:0 0 18px;font-weight:600}.info-list{display:grid;gap:14px}.info-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.07)}.info-row:last-child{padding-bottom:0;border:0}.info-row span{font-size:12px;color:var(--muted)}.info-row strong{font-size:13px;text-align:right;font-weight:500;max-width:62%}
+    .topic-wrap{display:flex;gap:8px;flex-wrap:wrap}.topic-chip{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.025);border-radius:999px;color:var(--muted);padding:9px 13px;font-size:12px;transition:all .2s}.topic-chip:hover{border-color:var(--acid);color:var(--acid);transform:translateY(-2px)}.topic-chip .chip-arrow{font-size:14px;color:var(--acid);margin-left:4px}
+    
+    /* practice */
+    .practice-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:17px}.question-card{padding:27px}.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 27px}.select-label{color:var(--quiet);font-size:11px;display:flex;align-items:center;gap:7px}.filter-select{border:1px solid rgba(255,255,255,.12);background:#191b22;color:var(--text);border-radius:9px;padding:7px 28px 7px 10px;font-size:12px;outline:0}.question-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:21px}.question-number{font-size:11px;letter-spacing:.1em;color:var(--quiet);text-transform:uppercase}.difficulty{font-size:11px;color:var(--acid);padding:5px 9px;border:1px solid rgba(232,255,90,.2);border-radius:999px}.question-card h2{font-family:var(--display);font-size:clamp(23px,3vw,31px);line-height:1.18;font-weight:500;max-width:730px;margin:0 0 26px;letter-spacing:-.035em}.options{display:grid;gap:10px}.option{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:1px solid rgba(255,255,255,.1);color:var(--text);background:rgba(255,255,255,.025);border-radius:13px;padding:14px 15px;transition:background .2s,border-color .2s,transform .2s}.option:hover:not([disabled]){border-color:var(--acid);background:rgba(232,255,90,.05);transform:translateX(3px)}.option[disabled]{cursor:default}.option-letter{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#24262e;color:var(--muted);font-size:12px;font-weight:600;flex:0 0 auto}.option.correct{border-color:rgba(232,255,90,.6);background:rgba(232,255,90,.09)}.option.correct .option-letter{background:var(--acid);color:var(--acid-ink)}.option.wrong{border-color:rgba(255,141,122,.65);background:rgba(255,141,122,.07)}.option.wrong .option-letter{background:var(--coral);color:#270d09}.answer-panel{margin-top:22px;border-top:1px solid rgba(255,255,255,.08);padding-top:19px;animation:fadeIn .3s both}.answer-panel h3{font-size:14px;margin:0 0 9px}.answer-panel p{color:var(--muted);font-size:13px;line-height:1.65;margin:0}.trick{margin-top:15px;padding:12px 14px;border-left:2px solid var(--acid);background:rgba(232,255,90,.05);color:#ccd3b5;font-size:12px}.question-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:25px}.next-btn{margin-left:auto}.practice-side{display:grid;align-content:start;gap:17px}.stats-card{padding:21px}.stats-card h3{font-size:14px;margin:0 0 17px}.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px}.mini-stat{padding:13px 12px;border:1px solid rgba(255,255,255,.07);border-radius:13px}.mini-stat span{color:var(--quiet);font-size:11px;display:block}.mini-stat strong{font-family:var(--display);font-size:23px;font-weight:500;display:block;margin-top:4px}.tip-card{padding:20px;background:linear-gradient(145deg,rgba(45,47,26,.84),rgba(20,22,24,.92));border-color:rgba(232,255,90,.15)}.tip-card .eyebrow{font-size:10px}.tip-card p{color:#c1c6ae;font-size:13px;line-height:1.5;margin:10px 0 0}
+    
+    /* teach */
+    .teach-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:17px}.topic-list-card{padding:10px}.lesson-index{padding:13px 14px 9px;color:var(--quiet);font-size:11px;text-transform:uppercase;letter-spacing:.12em}.lesson-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:12px;padding:13px 14px;transition:all .2s}.lesson-item:hover{background:rgba(255,255,255,.04);color:var(--text)}.lesson-item.active{color:var(--acid);background:rgba(232,255,90,.08);border-color:rgba(232,255,90,.15)}.lesson-item .lesson-index-num{font-size:11px;color:var(--quiet);width:20px}.lesson-item.active .lesson-index-num{color:var(--acid)}.lesson-item span:nth-child(2){font-size:13px}.lesson-item .load-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;border:1px solid var(--acid)}.lesson-card{padding:29px;min-height:480px}.lesson-card h2{font-family:var(--display);font-size:32px;line-height:1.05;font-weight:500;margin:10px 0 13px}.lesson-lede{font-size:15px;color:#c4c7bf;max-width:720px;line-height:1.7;margin:0 0 27px}.lesson-sections{display:grid;grid-template-columns:1fr 1fr;gap:17px}.lesson-section{border-top:1px solid rgba(255,255,255,.1);padding-top:15px}.lesson-section h3{font-size:13px;margin:0 0 9px}.lesson-section p,.lesson-section li{font-size:12px;color:var(--muted);line-height:1.65}.lesson-section p{margin:0}.lesson-section ul{padding-left:17px;margin:0}.lesson-section li+li{margin-top:5px}.formula{color:var(--acid)!important;font-family:monospace;font-size:12px!important;background:rgba(232,255,90,.05);padding:10px;border-radius:9px}
+    .expand-list{display:none}
+    
+    /* chat */
+    .chat-card{min-height:600px;display:flex;flex-direction:column;overflow:hidden}.chat-context{padding:18px 24px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:14px}.chat-context strong{font-size:13px}.chat-context span{color:var(--quiet);font-size:11px}.chat-messages{flex:1;padding:28px 24px;display:grid;align-content:start;gap:19px;max-height:510px;overflow:auto}.message{display:flex;gap:11px;max-width:78%}.message.user{margin-left:auto;flex-direction:row-reverse}.message-avatar{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;font-family:var(--display);font-size:11px;font-weight:600;color:var(--acid-ink);background:var(--acid)}.message.ai .message-avatar{color:var(--acid);background:rgba(232,255,90,.1);border:1px solid rgba(232,255,90,.18)}.message-bubble{border:1px solid rgba(255,255,255,.09);padding:11px 14px;border-radius:4px 14px 14px 14px;color:#d4d6ce;font-size:13px;line-height:1.6;white-space:pre-wrap;background:#191b22}.message.user .message-bubble{border-radius:14px 4px 14px 14px;background:rgba(232,255,90,.11);border-color:rgba(232,255,90,.16);color:#e1e6c4}.typing{display:flex;gap:4px;align-items:center;padding:13px 15px}.typing i{width:5px;height:5px;background:var(--acid);border-radius:50%;animation:blink 1s infinite}.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}.chat-compose{border-top:1px solid rgba(255,255,255,.08);padding:17px 20px;display:flex;gap:10px}.chat-compose textarea{resize:none;min-height:47px;max-height:110px;flex:1;outline:0;border:1px solid rgba(255,255,255,.1);background:#191b22;color:var(--text);border-radius:12px;padding:13px 14px;line-height:1.4}.chat-compose textarea::placeholder{color:var(--quiet)}
+    
+    /* progress */
+    .progress-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:17px}.score-card{padding:27px;min-height:223px;position:relative;overflow:hidden;background:linear-gradient(140deg,#20251b,#111418)}.score-card:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(232,255,90,.17);border-radius:50%;right:18px;top:15px;box-shadow:0 0 0 24px rgba(232,255,90,.025)}.score-card > *{position:relative;z-index:1}.score-big{font-family:var(--display);font-size:64px;line-height:1;margin:24px 0 8px;letter-spacing:-.07em}.score-big span{font-family:var(--sans);font-size:18px;color:var(--muted);letter-spacing:0}.score-card p{font-size:12px;color:#aeb7a2;margin:0}.score-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.score-mini{padding:21px}.score-mini span{color:var(--quiet);font-size:11px}.score-mini strong{display:block;font-family:var(--display);font-size:32px;font-weight:500;margin-top:15px}.performance-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.bars-card{padding:22px}.bars-card h3{font-size:14px;margin:0 0 22px}.performance-row{display:grid;grid-template-columns:100px 1fr 38px;gap:10px;align-items:center;margin-top:15px}.performance-row:first-of-type{margin-top:0}.performance-row label{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.performance-row strong{font-size:12px;text-align:right;font-weight:500}.performance-row .bar{margin:0;height:7px}.recent-card{padding:22px}.activity{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07)}.activity:last-child{border:0}.activity-mark{width:27px;height:27px;border-radius:9px;background:rgba(232,255,90,.08);color:var(--acid);display:grid;place-items:center}.activity-copy{flex:1;font-size:12px}.activity-copy strong{display:block;font-weight:500}.activity-copy span{display:block;color:var(--quiet);font-size:11px;margin-top:2px}.activity-result{font-size:11px;color:var(--acid)}.empty-state{text-align:center;color:var(--muted);padding:34px 15px}.empty-state svg{color:var(--acid);margin-bottom:12px}.empty-state p{margin:0;font-size:13px}
+    
+    .toast-region{position:fixed;z-index:20;bottom:22px;right:22px;display:grid;gap:9px;max-width:min(380px,calc(100vw - 32px))}.toast{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;background:#1c1f26;border:1px solid var(--line-strong);border-radius:13px;box-shadow:var(--shadow);font-size:12px;color:var(--muted);animation:toastIn .3s both}.toast strong{display:block;color:var(--text);margin-bottom:2px}.toast .toast-icon{color:var(--acid);margin-top:1px}
+    @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes blink{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+    @media (max-width: 940px){.hero{gap:35px;grid-template-columns:1fr 360px}.hero h1{font-size:clamp(50px,7vw,76px)}.app-shell{grid-template-columns:202px minmax(0,1fr)}.practice-grid,.teach-layout{grid-template-columns:1fr}.practice-side{grid-template-columns:1fr 1fr}.teach-layout .topic-list-card{display:flex;gap:4px;overflow:auto}.lesson-index{display:none}.lesson-item{white-space:nowrap}.lesson-item .lesson-index-num{display:none}}
+    @media (max-width: 720px){.land-nav{padding:20px 19px}.land-nav-note{display:none}.hero{display:block;padding:58px 19px 38px;min-height:0}.hero h1{font-size:clamp(51px,15vw,78px);max-width:600px}.hero-sub{font-size:16px}.hero-art{min-height:315px;margin-top:18px}.orbit{width:290px}.core{width:130px}.core svg{width:52px}.tag-a{left:0}.tag-b{right:-2%;}.tag-c{bottom:7%;}.land-bottom{padding:0 19px 30px;grid-template-columns:1fr}.land-feature{border-right:0;border-top:1px solid rgba(255,255,255,.08);padding:17px 0 !important}.building{padding:22px 18px}.build-head .brand{margin-bottom:35px}.build-head{margin-bottom:28px}.app-shell{display:block}.sidebar{height:auto;position:fixed;z-index:10;bottom:0;left:0;right:0;padding:8px 9px calc(8px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid rgba(255,255,255,.1);background:rgba(10,11,15,.94);backdrop-filter:blur(18px)}.sidebar .brand,.side-label,.sidebar-bottom{display:none}.side-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}.nav-btn{display:flex;flex-direction:column;gap:3px;justify-content:center;text-align:center;padding:8px 2px;border-radius:10px;font-size:10px}.nav-btn small{display:none}.main-area{padding:0 14px 91px}.topbar{height:65px;margin-bottom:27px}.mobile-menu{display:block;color:var(--text);font-family:var(--display);font-size:17px}.top-context{font-size:12px}.top-right{gap:7px}.offline-badge{display:none}.page-heading{display:block;margin-bottom:24px}.page-heading .heading-action{margin-top:17px}.grid-overview,.info-grid,.progress-hero,.performance-grid{grid-template-columns:1fr}.hero-card{min-height:290px}.card-pad{padding:21px}.hero-card h2{font-size:31px}.side-stack{grid-template-columns:1fr 1fr}.quick-card{grid-column:1/-1}.section-title{margin-top:29px}.practice-side{grid-template-columns:1fr 1fr}.question-card{padding:21px 17px}.question-footer{align-items:stretch;flex-direction:column}.next-btn{margin:0;width:100%}.teach-layout .topic-list-card{margin:0 -1px;border-radius:16px}.lesson-card{padding:21px 18px}.lesson-sections{grid-template-columns:1fr}.chat-card{min-height:calc(100dvh - 180px)}.chat-messages{padding:20px 15px}.message{max-width:91%}.score-mini-grid{grid-template-columns:1fr 1fr}.score-big{font-size:56px}.performance-row{grid-template-columns:82px 1fr 33px}}
+    @media (max-width: 420px){.input-wrap{padding-left:13px}.input-wrap .btn{padding:0 11px}.input-wrap .btn span{display:none}.hero-art{min-height:290px}.orbit{width:260px}.tag-b{right:-8%}.tag-a{left:-5%}.practice-side{grid-template-columns:1fr}.side-stack{grid-template-columns:1fr 1fr}.stat-card{padding:17px}.stat-value{font-size:30px}}
+  </style>
+</head>
+<body>
+  <div id="app" class="shell"></div>
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script>
+    (function () {
+      "use strict";
+      const app = document.getElementById("app");
+      const toastRegion = document.getElementById("toast-region");
+      const icons = {
+        spark: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.5 5.5L5 10l5.5 1.5L12 17l1.5-5.5L19 10l-5.5-1.5L12 3Z"/><path d="m19 16-.7 2.3L16 19l2.3.7L19 22l.7-2.3L22 19l-2.3-.7L19 16Z"/></svg>',
+        arrow: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
+        check: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>',
+        grid: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
+        target: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="m17.5 6.5 2-2M4.5 19.5l2-2"/></svg>',
+        book: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M4 5.5v16M8 7h8M8 11h7"/></svg>',
+        chat: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.5 8.5 0 0 1-4-.9L4 20l1.3-3.5A7.4 7.4 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/></svg>',
+        chart: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h17"/><path d="m7 15 3-4 3 2 5-7"/></svg>',
+        clock: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>',
+        send: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 16 8-16 8 3-8-3-8Z"/><path d="M7 12h13"/></svg>',
+        plus: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+        help: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9a2.4 2.4 0 1 1 3.8 1.9c-1.2.8-1.5 1.2-1.5 2.5M12 16.5h.01"/></svg>',
+        refresh: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M19 8a7 7 0 1 0 1 6"/><path d="M19 4v4h-4"/></svg>'
+      };
+      const icon = (name) => icons[name] || icons.spark;
+      const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[c]));
+      const defaultTopics = ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability", "Data Interpretation", "General Awareness"];
+      const appState = {
+        view: "landing",
+        tab: "overview",
+        examName: "",
+        examInfo: null,
+        syllabus: [],
+        currentTopic: "",
+        currentDifficulty: "Medium",
+        currentQuestion: null,
+        questionsAnswered: 0,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        score: 0,
+        topicStats: {},
+        difficultyStats: { Easy:{ attempted:0, correct:0 }, Medium:{ attempted:0, correct:0 }, Hard:{ attempted:0, correct:0 } },
+        lessons: {},
+        chatHistory: [],
+        recentActivity: [],
+        loading: false,
+        buildStep: 0,
+        offline: false,
+        practiceLoading: false,
+        lessonLoading: false,
+        chatLoading: false,
+        openTopics: {}
+      };
+      const fallbackQuestions = {
+        "Quantitative Aptitude": {
+          Easy: { question:"A train covers 180 km in 3 hours. What is its average speed?", options:["45 km/h","50 km/h","60 km/h","72 km/h"], answer:2, explanation:"Average speed is total distance divided by total time: 180 ÷ 3 = 60 km/h.", trick:"Keep units aligned first. Distance ÷ time is the quickest route." },
+          Medium: { question:"If a number is increased by 20% and then decreased by 20%, what is the net change?", options:["No change","4% decrease","4% increase","2% decrease"], answer:1, explanation:"Take 100 as the base: 100 × 1.2 × .8 = 96, so the net change is a 4% decrease.", trick:"For equal percentage moves, net change is -x²/100." },
+          Hard: { question:"A can complete a task in 12 days and B in 18 days. Working together, how many days do they take?", options:["6.2 days","7.2 days","8 days","9 days"], answer:1, explanation:"Together their daily work is 1/12 + 1/18 = 5/36, so time is 36/5 = 7.2 days.", trick:"Add rates, never days. Invert only once at the end." }
+        }
+      };
+      function topicQuestion(topic, difficulty) {
+        const set = fallbackQuestions[topic] && fallbackQuestions[topic][difficulty];
+        if (set) return Object.assign({ topic, difficulty }, set);
+        const generic = {
+          question: "Which study habit most reliably improves recall for a concept-heavy section?",
+          options: ["Reading the same page repeatedly", "Testing yourself after a short review", "Highlighting every definition", "Studying only the night before"],
+          answer: 1,
+          explanation: "Retrieval practice makes your brain reconstruct the answer, which strengthens later recall more than passive rereading.",
+          trick: "Close the notes, recall first, then check. The effort is the memory workout."
+        };
+        return Object.assign({ topic, difficulty }, generic);
+      }
+      function fallbackExam(name) {
+        const n = name || "your exam";
+        return {
+          examName:n, pattern:"Objective paper • timed sections", difficulty:"Moderate to challenging",
+          importantSections:["Core concepts","Speed & accuracy","Application questions"],
+          preparationTime:"6–8 weeks", preparationStrategy:"Build accuracy first, then add timed practice. Review every miss within 24 hours.",
+          timeManagement:"Use a 60 / 25 / 15 split: first pass, marked questions, final review.",
+          syllabus: defaultTopics.map((title, i) => ({ title, priority:i < 2 ? "High" : i === 2 ? "Medium" : "Build"}))
+        };
+      }
+      function fallbackLesson(topic) {
+        const exam = appState.examName || "your exam";
+        const lead = {
+          "Quantitative Aptitude":"Quantitative Aptitude is the habit of turning a wordy situation into a small, reliable model.",
+          "Logical Reasoning":"Logical Reasoning rewards clean relationships more than fast guessing. Draw the structure before you solve.",
+          "Verbal Ability":"Verbal Ability is precision under pressure: understand the author, then choose the answer that says exactly enough.",
+          "Data Interpretation":"Data Interpretation is a two-part skill: read the table correctly, then calculate only what the question needs.",
+          "General Awareness":"General Awareness sticks when facts are linked to a story, a timeline, or a cause-and-effect chain."
+        }[topic] || topic + " becomes manageable when you identify its structure, practise the common patterns, and review your misses.";
+        return { title:topic, simpleExplanation:lead, importantConcepts:["Identify the question type before calculating.","Write only the information that changes the answer.","Use elimination when certainty is not immediate."], formulas:topic === "Quantitative Aptitude" ? ["Speed = Distance ÷ Time","Percentage change = (Change ÷ Original) × 100"] : ["Claim → evidence → conclusion","Accuracy before speed"], shortcuts:["Estimate the range before exact calculation.","Mark a question and return with a fresh working memory."], solvedExample:"Start with a simple base case. Name the known values, state the rule, and check whether the final answer has the right unit or meaning.", commonMistakes:["Rushing past a qualifier such as not, except, or least.","Using a memorised rule without checking its conditions."], examTips:"In " + exam + ", protect your first pass. Collect the questions you can earn quickly, then spend your time where the marks justify it." };
+      }
+      function notify(title, message, tone) {
+        const node = document.createElement("div");
+        node.className = "toast";
+        node.innerHTML = '<span class="toast-icon">' + icon(tone === "error" ? "help" : "check") + '</span><div><strong>' + esc(title) + '</strong><span>' + esc(message) + '</span></div>';
+        toastRegion.appendChild(node);
+        setTimeout(() => node.remove(), 4200);
+      }
+      function parseAIText(payload) {
+        const raw = typeof payload === "string" ? payload : payload && (payload.text || payload.content || payload.response || "");
+        if (typeof raw !== "string") return raw || {};
+        try { return JSON.parse(raw); } catch (_) {}
+        const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i);
+        if (fenced) { try { return JSON.parse(fenced[1]); } catch (_) {} }
+        const object = raw.match(/\{[\s\S]*\}/);
+        if (object) { try { return JSON.parse(object[0]); } catch (_) {} }
+        return { text: raw };
+      }
+      async function aiRequest(prompt) {
+        const response = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ prompt }) });
+        if (!response.ok) throw new Error("AI request unavailable");
+        const payload = await response.json();
+        return parseAIText(payload);
+      }
+      function setApp(html) { app.innerHTML = html; window.scrollTo({ top:0, behavior:"smooth" }); }
+      function logo() { return '<span class="brand-mark">' + icon("spark") + '</span><span>PrepMind<span class="accent">.</span></span>'; }
+      
+      function renderLanding() {
+         setApp('<main class="landing"><header class="land-nav"><a class="brand" href="#" data-action="home">' + logo() + '</a><span class="land-nav-note">A quieter way to prepare</span></header><section class="hero"><div class="hero-copy"><span class="eyebrow">Your personal exam studio</span><h1>Prepare smarter.<br><em>Score higher.</em></h1><p class="hero-sub">Your AI-powered exam preparation companion.</p><form id="exam-form" class="exam-form"><label class="sr-only" for="exam-name">Name of your exam</label><div class="input-wrap">' + icon("target") + '<input id="exam-name" name="examName" autocomplete="off" placeholder="Enter your exam name — TCS NQT, CAT, GATE, SBI PO..." value="' + esc(appState.examName) + '"><button class="btn btn-primary" type="submit"><span>Start Preparing</span>' + icon("arrow") + '</button></div><div id="form-error" class="form-error" role="alert"></div></form><div class="hero-proof"><div class="avatar-stack"><span>AR</span><span>MK</span><span>SI</span><span>+</span></div><span>Made for focused sessions, not noisy dashboards.</span></div></div><div class="hero-art" aria-hidden="true"><div class="orbit"><div class="orbit-line"></div><div class="core">' + icon("spark") + '</div><div class="orbit-tag tag-a"><strong>01 / Focus</strong>one next move</div><div class="orbit-tag tag-b"><strong>Recall loop</strong>learn by doing</div><div class="orbit-tag tag-c"><strong>02 / Clarity</strong>less tab-switching</div></div></div></section><section class="land-bottom"><div class="land-feature"><span class="feature-num">01</span><h3>One plan, your exam</h3><p>Pattern-aware preparation instead of generic advice.</p></div><div class="land-feature"><span class="feature-num">02</span><h3>Practice with a pulse</h3><p>Every answer updates a small, honest picture of progress.</p></div><div class="land-feature"><span class="feature-num">03</span><h3>Ask without stopping</h3><p>Turn the question you are stuck on into momentum.</p></div></section></main>');
+        document.getElementById("exam-form").addEventListener("submit", beginExam);
+      }
+      async function beginExam(event) {
+        event.preventDefault();
+        const input = document.getElementById("exam-name");
+        const name = input.value.trim();
+        const error = document.getElementById("form-error");
+        if (!name) { error.textContent = "Give your study plan a name first."; input.focus(); return; }
+        error.textContent = "";
+        const buildStarted = Date.now();
+        appState.examName = name; appState.view = "building"; appState.loading = true; appState.buildStep = 0; renderBuilding();
+        const steps = [800, 1450, 2150, 2850, 3550];
+        steps.forEach((delay, i) => setTimeout(() => { appState.buildStep = i + 1; updateBuildSteps(); }, delay));
+        try {
+          const result = await aiRequest('Create a structured exam preparation profile for "' + name + '". Return JSON only with keys examName, pattern, difficulty, importantSections (array), preparationTime, preparationStrategy, timeManagement, syllabus (array of objects with title and priority). Keep syllabus to 5 practical topics.');
+          const candidate = result && (result.examName || result.syllabus) ? result : fallbackExam(name);
+          appState.examInfo = Object.assign(fallbackExam(name), candidate, { examName:name });
+          if (!Array.isArray(appState.examInfo.importantSections)) appState.examInfo.importantSections = fallbackExam(name).importantSections;
+          appState.syllabus = (Array.isArray(appState.examInfo.syllabus) && appState.examInfo.syllabus.length ? appState.examInfo.syllabus : defaultTopics.map(title => ({title,priority:"Build"}))).map(x => typeof x === "string" ? ({title:x,priority:"Build"}) : x);
+          appState.currentTopic = appState.syllabus[0].title;
+        } catch (_) {
+          appState.offline = true; appState.examInfo = fallbackExam(name); appState.syllabus = appState.examInfo.syllabus; appState.currentTopic = appState.syllabus[0].title;
+        }
+        setTimeout(() => { appState.view = "dashboard"; appState.loading = false; appState.tab = "overview"; renderDashboard(); if (appState.offline) notify("Offline plan ready", "AI is unavailable, so your local study plan is active.", "error"); }, Math.max(0, 4050 - (Date.now() - buildStarted)));
+      }
+      function renderBuilding() {
+         const steps = [["Identifying exam pattern","Finding the shape of the paper"],["Understanding syllabus","Choosing the sections worth your time"],["Analyzing difficulty","Balancing depth, speed, and review"],["Creating preparation strategy","Making the first session useful"],["Preparing your AI study plan","A plan you can actually follow"]];
+         setApp('<main class="building"><div class="build-card"><div class="build-head"><a class="brand" href="#" data-action="home">' + logo() + '</a><span class="eyebrow">Personalizing your path</span><h1>Building your<br><span class="accent">preparation plan.</span></h1><p>Building your personalized preparation plan for ' + esc(appState.examName) + '.</p></div><div class="step-list">' + steps.map((s, i) => '<div class="build-step ' + (appState.buildStep > i ? "done " : "") + (appState.buildStep === i ? "active" : "") + '" data-step="' + i + '"><span class="step-icon">' + icon(i === 0 ? "target" : i === 1 ? "book" : i === 2 ? "clock" : i === 3 ? "grid" : "spark") + '</span><span class="step-text"><strong>' + s[0] + '</strong><span>' + s[1] + '</span></span><span class="step-check">' + icon("check") + '</span></div>').join("") + '</div><p class="build-note">You can change the rhythm later. Nothing is locked in.</p></div></main>');
+      }
+      function updateBuildSteps() { document.querySelectorAll(".build-step").forEach((node, i) => { node.className = "build-step " + (appState.buildStep > i ? "done " : "") + (appState.buildStep === i ? "active" : ""); }); }
+      
+      function navButton(id, label, ico) { return '<button class="nav-btn ' + (appState.tab === id ? "active" : "") + '" data-tab="' + id + '" aria-current="' + (appState.tab === id ? "page" : "false") + '">' + icon(ico) + '<span>' + label + '</span>' + (id === "progress" ? '<small>' + appState.questionsAnswered + '</small>' : '') + '</button>'; }
+      function renderDashboard() {
+        setApp('<div class="app-shell"><aside class="sidebar"><a class="brand" href="#" data-action="home">' + logo() + '</a><div class="side-label">Your studio</div><nav class="side-nav" aria-label="Study areas">' + navButton("overview","Overview","grid") + navButton("practice","Practice","target") + navButton("teach","Teach Me","book") + navButton("doubt","Ask Doubt","chat") + navButton("progress","Progress","chart") + '</nav><div class="sidebar-bottom"><div class="mini-profile"><span class="profile-orb">' + esc((appState.examName || "P").slice(0,1).toUpperCase()) + '</span><div><strong>' + esc(appState.examName) + '</strong><span>Active study plan</span></div></div></div></aside><main class="main-area"><header class="topbar"><button class="mobile-menu" data-action="home" aria-label="Return to home">PrepMind.</button><div class="top-context"><span class="quiet">Study studio</span><span>/</span><span class="crumb">' + esc(tabLabel(appState.tab)) + '</span></div><div class="top-right"><span class="offline-badge"><i></i>' + (appState.offline ? "Offline mode" : "Plan synced") + '</span><button class="help-btn" data-action="help" aria-label="Show help">' + icon("help") + '</button></div></header><div class="main-content" id="main-content"></div></main></div>');
+        renderTab();
+      }
+      function tabLabel(id) { return ({overview:"Overview",practice:"Practice",teach:"Teach Me",doubt:"Ask Doubt",progress:"Progress"})[id] || "Overview"; }
+      function renderTab() {
+        const target = document.getElementById("main-content");
+        if (!target) return;
+        target.innerHTML = appState.tab === "overview" ? overviewHTML() : appState.tab === "practice" ? practiceHTML() : appState.tab === "teach" ? teachHTML() : appState.tab === "doubt" ? doubtHTML() : progressHTML();
+        bindTab();
+      }
+      function heading(eyebrow, title, sub, action) { return '<div class="page-heading"><div><span class="eyebrow">' + eyebrow + '</span><h1 class="display">' + title + '</h1><p>' + sub + '</p></div>' + (action || "") + '</div>'; }
+      function overviewHTML() {
+        const info = appState.examInfo || fallbackExam(appState.examName);
+        const topics = appState.syllabus.length ? appState.syllabus : info.syllabus;
+        return heading("Good to see you", "A clear start to " + esc(appState.examName) + ".", "Your plan is set up. Choose one useful next move.", '<button class="btn btn-primary heading-action" data-tab="practice">' + icon("target") + ' Start practice</button>') + '<div class="grid-overview"><section class="card hero-card card-pad"><span class="eyebrow">Today\'s north star</span><h2>Accuracy first.<br>Speed follows.</h2><p>' + esc(info.preparationStrategy) + '</p><div class="hero-card-footer"><span class="pill">' + icon("clock") + esc(info.preparationTime) + '</span><span class="pill">' + esc(info.difficulty) + '</span></div></section><div class="side-stack"><div class="card stat-card"><div class="stat-top"><span>Plan progress</span><span class="accent">' + Math.min(appState.questionsAnswered * 4, 100) + '%</span></div><div class="stat-value">' + appState.questionsAnswered + ' <small>questions answered</small></div><div class="bar"><i style="width:' + Math.min(appState.questionsAnswered * 4, 100) + '%"></i></div></div><div class="card quick-card"><div><span class="eyebrow">Next up</span><p>Try a question in ' + esc(appState.currentTopic) + '</p></div><span class="icon-box">' + icon("arrow") + '</span></div></div></div><div class="section-title"><h2>Exam pattern</h2></div><div class="info-grid"><section class="card info-card"><h3>What to expect</h3><div class="info-list"><div class="info-row"><span>Pattern</span><strong>' + esc(info.pattern) + '</strong></div><div class="info-row"><span>Difficulty</span><strong>' + esc(info.difficulty) + '</strong></div><div class="info-row"><span>Preparation window</span><strong>' + esc(info.preparationTime) + '</strong></div><div class="info-row"><span>Time strategy</span><strong>' + esc(info.timeManagement) + '</strong></div></div></section><section class="card info-card"><h3>Important sections</h3><div class="topic-wrap">' + (info.importantSections || []).map(x => '<button class="topic-chip" data-topic="' + esc(x) + '">' + esc(x) + ' <span class="chip-arrow">+</span></button>').join("") + '</div><div style="height:24px"></div><h3>Preparation strategy</h3><p class="muted" style="font-size:13px;line-height:1.65;margin:0">' + esc(info.preparationStrategy) + '</p></section></div><div class="section-title"><h2>Your syllabus</h2><span class="quiet" style="font-size:12px">' + topics.length + ' focus areas</span></div><section class="card info-card"><div class="topic-wrap">' + topics.map((x, i) => '<button class="topic-chip" data-topic="' + esc(x.title) + '">' + esc(x.title) + ' <span class="chip-arrow">→</span></button>').join("") + '</div></section>';
+      }
+      function practiceHTML() {
+        const q = appState.currentQuestion;
+        const stats = appState.topicStats[appState.currentTopic] || {attempted:0,correct:0};
+        const answered = q && q.selected !== undefined;
+        const options = q ? q.options.map((opt, i) => '<button class="option ' + (answered && i === q.answer ? "correct " : "") + (answered && i === q.selected && i !== q.answer ? "wrong " : "") + '" data-option="' + i + '" ' + (answered ? "disabled" : "") + '><span class="option-letter">' + String.fromCharCode(65+i) + '</span><span>' + esc(opt) + '</span>' + (answered && i === q.answer ? '<span style="margin-left:auto;color:var(--acid)">' + icon("check") + '</span>' : "") + '</button>').join("") : "";
+        const feedback = answered ? '<div class="answer-panel"><h3>' + (q.selected === q.answer ? '<span class="accent">Correct.</span> Nice read.' : '<span style="color:var(--coral)">Not this time.</span> The answer is ' + String.fromCharCode(65 + q.answer) + '.') + '</h3><p>' + esc(q.explanation) + '</p><div class="trick"><strong>Shortcut</strong><br>' + esc(q.trick) + '</div></div><div class="question-footer"><span class="quiet" style="font-size:12px">' + (q.selected === q.answer ? "Keep that reasoning pattern." : "Review the explanation, then keep moving.") + '</span><button class="btn btn-primary next-btn" data-action="next-question">Next question ' + icon("arrow") + '</button></div>' : "";
+        const body = appState.practiceLoading ? '<div class="empty-state"><div class="typing" style="justify-content:center">' + icon("spark") + '<span class="muted">Finding a useful question</span><i></i><i></i><i></i></div></div>' : q ? '<div class="question-meta"><span class="question-number">Question ' + (appState.questionsAnswered + (answered ? 0 : 1)) + ' · ' + esc(q.topic) + '</span><span class="difficulty">' + esc(q.difficulty) + '</span></div><h2>' + esc(q.question) + '</h2><div class="options">' + options + '</div>' + feedback : '<div class="empty-state"><div style="color:var(--acid)">' + icon("target") + '</div><p>Choose your level and generate a question to begin.</p></div>';
+        return heading("Practice room", "One question at a time.", "Build the kind of calm that survives a timer.", '<button class="btn btn-ghost heading-action" data-action="generate-question">' + icon("refresh") + ' New question</button>') + '<div class="practice-grid"><section class="card question-card"><div class="filter-row"><label class="select-label">Topic <select class="filter-select" id="practice-topic">' + appState.syllabus.map(x => '<option ' + (x.title === appState.currentTopic ? "selected" : "") + '>' + esc(x.title) + '</option>').join("") + '</select></label><label class="select-label">Level <select class="filter-select" id="practice-difficulty"><option ' + (appState.currentDifficulty === "Easy" ? "selected" : "") + '>Easy</option><option ' + (appState.currentDifficulty === "Medium" ? "selected" : "") + '>Medium</option><option ' + (appState.currentDifficulty === "Hard" ? "selected" : "") + '>Hard</option></select></label></div>' + body + '</section><aside class="practice-side"><section class="card stats-card"><h3>Live stats</h3><div class="mini-stats"><div class="mini-stat"><span>Attempted</span><strong>' + appState.questionsAnswered + '</strong></div><div class="mini-stat"><span>Correct</span><strong class="accent">' + appState.correctAnswers + '</strong></div><div class="mini-stat"><span>Wrong</span><strong style="color:var(--coral)">' + appState.wrongAnswers + '</strong></div><div class="mini-stat"><span>Accuracy</span><strong>' + accuracy() + '%</strong></div></div><div class="section-title" style="margin:21px 0 10px"><h2 style="font-size:14px">This topic</h2><span class="quiet" style="font-size:11px">' + stats.correct + '/' + stats.attempted + '</span></div><div class="bar"><i style="width:' + (stats.attempted ? Math.round(stats.correct/stats.attempted*100) : 0) + '%"></i></div></section><section class="card tip-card"><span class="eyebrow">A useful rule</span><p>Do not mark a question wrong until you can name the exact step where your reasoning changed direction.</p></section></aside></div>';
+      }
+      function teachHTML() {
+        const active = appState.currentTopic || (appState.syllabus[0] && appState.syllabus[0].title);
+        const lesson = appState.lessons[active];
+        return heading("The quiet classroom", "Teach Me.", "Open a topic when you want the idea to click, not just the answer.", "") + '<div class="teach-layout"><section class="card topic-list-card"><div class="lesson-index">Syllabus · ' + appState.syllabus.length + ' topics</div>' + appState.syllabus.map((x, i) => '<button class="lesson-item ' + (active === x.title ? "active" : "") + '" data-lesson-topic="' + esc(x.title) + '"><span class="lesson-index-num">0' + (i+1) + '</span><span>' + esc(x.title) + '</span>' + (appState.lessons[x.title] ? '<span class="load-dot"></span>' : '') + '</button>').join("") + '</section><section class="card lesson-card">' + (appState.lessonLoading ? '<div class="empty-state" style="padding-top:100px"><div class="typing" style="justify-content:center"><span class="muted">Opening the ' + esc(active) + ' lesson</span><i></i><i></i><i></i></div></div>' : renderLesson(lesson || fallbackLesson(active))) + '</section></div>';
+      }
+      function listHTML(arr) { return '<ul>' + (arr || []).map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>'; }
+      function renderLesson(lesson) {
+        return '<span class="eyebrow">Lesson note</span><h2>' + esc(lesson.title || appState.currentTopic) + '</h2><p class="lesson-lede">' + esc(lesson.simpleExplanation || lesson.text || "Work from the underlying idea, then practise the pattern.") + '</p><div class="lesson-sections"><div class="lesson-section"><h3>Important concepts</h3>' + listHTML(lesson.importantConcepts) + '</div><div class="lesson-section"><h3>Shortcuts to keep</h3>' + listHTML(lesson.shortcuts) + '</div><div class="lesson-section"><h3>Formulas & anchors</h3>' + ((lesson.formulas || []).map(x => '<p class="formula">' + esc(x) + '</p>').join("") || '<p class="formula">Name the rule before you use it.</p>') + '</div><div class="lesson-section"><h3>Solved example</h3><p>' + esc(lesson.solvedExample) + '</p></div><div class="lesson-section"><h3>Common mistakes</h3>' + listHTML(lesson.commonMistakes) + '</div><div class="lesson-section"><h3>' + esc(appState.examName) + ' tip</h3><p>' + esc(lesson.examTips) + '</p></div></div>';
+      }
+      function doubtHTML() {
+        const messages = appState.chatHistory.length ? appState.chatHistory.map(m => '<div class="message ' + (m.role === "user" ? "user" : "ai") + '"><span class="message-avatar">' + (m.role === "user" ? esc((appState.examName || "Y").slice(0,1).toUpperCase()) : icon("spark")) + '</span><div class="message-bubble">' + esc(m.text) + '</div></div>').join("") : '<div class="empty-state"><div style="color:var(--acid)">' + icon("chat") + '</div><p>Ask anything about ' + esc(appState.examName) + '. Start with the part that feels foggy.</p></div>';
+        return heading("No question is too small", "Ask Doubt.", "A focused conversation with your exam and syllabus already in the room.", "") + '<section class="card chat-card"><div class="chat-context"><div><strong>' + esc(appState.examName) + ' context</strong><span> · ' + appState.syllabus.length + ' syllabus topics loaded</span></div><span class="pill">' + icon("spark") + ' Study companion</span></div><div class="chat-messages" id="chat-messages">' + messages + (appState.chatLoading ? '<div class="message ai"><span class="message-avatar">' + icon("spark") + '</span><div class="message-bubble typing"><i></i><i></i><i></i></div></div>' : '') + '</div><form class="chat-compose" id="chat-form"><label class="sr-only" for="chat-input">Ask your doubt</label><textarea id="chat-input" rows="1" placeholder="Ask about a concept, shortcut, or mistake..."></textarea><button class="btn btn-primary" type="submit" aria-label="Send doubt">' + icon("send") + '</button></form></section>';
+      }
+      function accuracy() { return appState.questionsAnswered ? Math.round(appState.correctAnswers / appState.questionsAnswered * 100) : 0; }
+      function progressHTML() {
+        const topicRows = appState.syllabus.map(x => { const s = appState.topicStats[x.title] || {attempted:0,correct:0}; return '<div class="performance-row"><label>' + esc(x.title) + '</label><div class="bar"><i style="width:' + (s.attempted ? Math.round(s.correct/s.attempted*100) : 0) + '%"></i></div><strong>' + (s.attempted ? Math.round(s.correct/s.attempted*100) : 0) + '%</strong></div>'; }).join("");
+        const diffRows = ["Easy","Medium","Hard"].map(d => { const s = appState.difficultyStats[d]; return '<div class="performance-row"><label>' + d + '</label><div class="bar"><i style="width:' + (s.attempted ? Math.round(s.correct/s.attempted*100) : 0) + '%"></i></div><strong>' + (s.attempted ? Math.round(s.correct/s.attempted*100) : 0) + '%</strong></div>'; }).join("");
+        const activity = appState.recentActivity.length ? appState.recentActivity.slice().reverse().map(x => '<div class="activity"><span class="activity-mark">' + icon(x.correct ? "check" : "target") + '</span><div class="activity-copy"><strong>' + (x.correct ? "Correct answer" : "Reviewed a miss") + ' · ' + esc(x.topic) + '</strong><span>' + esc(x.difficulty) + ' difficulty · just now</span></div><span class="activity-result">' + (x.correct ? "+1 point" : "review") + '</span></div>').join("") : '<div class="empty-state"><div style="color:var(--acid)">' + icon("chart") + '</div><p>Your recent practice will appear here.</p></div>';
+        return heading("Your signal, not a scorecard", "Progress.", "Notice what is getting easier. Spend your energy where it still matters.", "") + '<div class="progress-hero"><section class="card score-card"><span class="eyebrow">Overall score</span><div class="score-big">' + appState.score + '<span> pts</span></div><p>' + (appState.questionsAnswered ? "A growing score built from deliberate practice." : "Answer your first question to start your signal.") + '</p></section><div class="score-mini-grid"><section class="card score-mini"><span>Accuracy</span><strong class="accent">' + accuracy() + '%</strong></section><section class="card score-mini"><span>Attempted</span><strong>' + appState.questionsAnswered + '</strong></section><section class="card score-mini"><span>Correct</span><strong>' + appState.correctAnswers + '</strong></section><section class="card score-mini"><span>Wrong</span><strong style="color:var(--coral)">' + appState.wrongAnswers + '</strong></section></div></div><div class="section-title"><h2>Performance map</h2></div><div class="performance-grid"><section class="card bars-card"><h3>By topic</h3>' + topicRows + '</section><section class="card bars-card"><h3>By difficulty</h3>' + diffRows + '</section></div><div class="section-title"><h2>Recent activity</h2></div><section class="card recent-card">' + activity + '</section>';
+      }
+      
+      function bindTab() {
+        document.querySelectorAll("[data-tab]").forEach(node => node.addEventListener("click", () => { appState.tab = node.dataset.tab; renderDashboard(); }));
+        document.querySelectorAll("[data-topic]").forEach(node => node.addEventListener("click", () => { appState.currentTopic = node.dataset.topic; appState.tab = "teach"; loadLesson(appState.currentTopic); }));
+        document.querySelectorAll("[data-lesson-topic]").forEach(node => node.addEventListener("click", () => { appState.currentTopic = node.dataset.lessonTopic; loadLesson(appState.currentTopic); }));
+        const topicSelect = document.getElementById("practice-topic"); if (topicSelect) topicSelect.addEventListener("change", e => { appState.currentTopic=e.target.value; appState.currentQuestion=null; renderTab(); });
+        const diffSelect = document.getElementById("practice-difficulty"); if (diffSelect) diffSelect.addEventListener("change", e => { appState.currentDifficulty=e.target.value; appState.currentQuestion=null; renderTab(); });
+        document.querySelectorAll("[data-option]").forEach(node => node.addEventListener("click", () => answerQuestion(Number(node.dataset.option))));
+        const form = document.getElementById("chat-form"); if (form) { form.addEventListener("submit", sendDoubt); const text=document.getElementById("chat-input"); text.addEventListener("keydown", e => { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit();} }); }
+      }
+      function generateQuestion() {
+        appState.practiceLoading = true; renderTab();
+        const topic = appState.currentTopic || appState.syllabus[0].title, difficulty = appState.currentDifficulty;
+        aiRequest('Create one multiple choice question for the exam "' + appState.examName + '" on the topic "' + topic + '" at ' + difficulty + ' difficulty. Return JSON only with question, options (array of 4 strings), answer (zero-based number), explanation, trick.').then(result => {
+          const q = result && result.question && Array.isArray(result.options) ? result : topicQuestion(topic,difficulty);
+          appState.currentQuestion = Object.assign({}, q, { topic, difficulty }); appState.practiceLoading=false; renderTab();
+        }).catch(() => { appState.offline=true; appState.currentQuestion=topicQuestion(topic,difficulty); appState.practiceLoading=false; renderDashboard(); notify("Local question ready", "AI is unavailable. Practice continues in offline mode.", "error"); });
+      }
+      function answerQuestion(index) {
+        if (!appState.currentQuestion || appState.currentQuestion.selected !== undefined) return;
+        const q=appState.currentQuestion; q.selected=index; const correct=index===q.answer;
+        appState.questionsAnswered++; correct ? appState.correctAnswers++ : appState.wrongAnswers++; appState.score += correct ? (q.difficulty==="Hard"?3:q.difficulty==="Medium"?2:1) : 0;
+        appState.topicStats[q.topic] = appState.topicStats[q.topic] || {attempted:0,correct:0}; appState.topicStats[q.topic].attempted++; if(correct) appState.topicStats[q.topic].correct++;
+        appState.difficultyStats[q.difficulty].attempted++; if(correct) appState.difficultyStats[q.difficulty].correct++;
+        appState.recentActivity.push({topic:q.topic,difficulty:q.difficulty,correct}); renderDashboard();
+      }
+      function nextQuestion() { appState.currentQuestion=null; generateQuestion(); }
+      async function loadLesson(topic) {
+        appState.currentTopic=topic; if (appState.lessons[topic]) { appState.tab="teach"; renderDashboard(); return; }
+        appState.tab="teach"; appState.lessonLoading=true; renderDashboard();
+        try { const result=await aiRequest('Teach the student preparing for "' + appState.examName + '" about "' + topic + '". Return JSON only with title, simpleExplanation, importantConcepts (array), formulas (array), shortcuts (array), solvedExample, commonMistakes (array), examTips.'); appState.lessons[topic] = result && (result.simpleExplanation || result.importantConcepts) ? Object.assign(fallbackLesson(topic),result) : fallbackLesson(topic); }
+        catch (_) { appState.offline=true; appState.lessons[topic]=fallbackLesson(topic); notify("Lesson available offline", "A clear local lesson is ready while AI reconnects.", "error"); }
+        appState.lessonLoading=false; renderDashboard();
+      }
+      async function sendDoubt(event) {
+        event.preventDefault(); const input=document.getElementById("chat-input"); const text=input.value.trim(); if(!text||appState.chatLoading)return;
+        appState.chatHistory.push({role:"user",text}); input.value=""; appState.chatLoading=true; renderTab();
+        try { const context=appState.syllabus.map(x=>x.title).join(", "); const result=await aiRequest('You are PrepMind AI helping with "' + appState.examName + '". Syllabus: ' + context + '. Conversation: ' + JSON.stringify(appState.chatHistory.slice(-8)) + '. Answer this student doubt clearly and briefly: ' + text); const reply=(result && (result.text || result.answer || result.message)) || "Try explaining the exact step where the idea starts to feel unclear, and we can work from there."; appState.chatHistory.push({role:"ai",text:typeof reply==="string"?reply:JSON.stringify(reply)}); }
+        catch (_) { appState.offline=true; appState.chatHistory.push({role:"ai",text:"I’m in offline mode right now. Start with the definition, write down what the question gives you, and name the rule you think applies. If you share the exact step that feels unclear, you can still work it through here."}); }
+        appState.chatLoading=false; renderTab(); const messages=document.getElementById("chat-messages"); if(messages)messages.scrollTop=messages.scrollHeight;
+      }
+      function homeAction() { appState.view="landing"; appState.loading=false; renderLanding(); }
+      document.addEventListener("click", (event) => {
+        const action=event.target.closest("[data-action]"); if(!action)return;
+        event.preventDefault(); const type=action.dataset.action;
+        if(type==="home") homeAction();
+        if(type==="help") notify("A small study rule", "Use Overview to orient, Practice to test, Teach Me to repair, and Progress to notice.", "info");
+        if(type==="generate-question") generateQuestion();
+        if(type==="next-question") nextQuestion();
+      });
+      function boot() { renderLanding(); }
+      boot();
+    })();
+  </script>
+</body>
 </html>

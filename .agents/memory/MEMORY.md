@@ -1,0 +1,1 @@
+- [Anthropic credit fallback](anthropic-credit-fallback.md) — a configured key can still fail when the provider account has no credits; preserve local study fallbacks.

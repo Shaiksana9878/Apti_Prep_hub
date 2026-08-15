@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist/public",
+  "framework": null,
+  "functions": {
+    "api/claude.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}

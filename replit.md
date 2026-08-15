@@ -1,6 +1,6 @@
-# [Project name]
+# PrepMind AI
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+PrepMind AI is a dark, focused exam-preparation studio that creates personalized plans, practice questions, guided lessons, doubt-solving chat, and live progress tracking for any exam.
 
 ## Run & Operate
 
@@ -22,23 +22,31 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/prep-mind-ai/index.html` — complete vanilla frontend, including inline CSS and JavaScript state
+- `artifacts/prep-mind-ai/api/claude.js` — Vercel serverless AI proxy
+- `artifacts/prep-mind-ai/vercel.json` — Vercel build and function configuration
+- `artifacts/api-server/src/routes/claude.ts` — Replit preview route for the same `/api/claude` contract
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The browser app remains a single `index.html` with no frontend framework, matching the deployment brief.
+- AI credentials are used only by server-side handlers; the client calls `/api/claude` and never receives the key.
+- The app keeps a complete local fallback for exam plans, practice, lessons, and chat so the study flow remains usable when AI is unavailable.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Any exam name can be turned into a personalized study plan.
+- Five dashboard areas support overview, practice, teaching, doubt solving, and progress review.
+- Practice answers update score, accuracy, topic performance, difficulty performance, and recent activity immediately.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Keep the main app as a single vanilla `index.html`; do not replace it with React or another frontend framework.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- `/api/claude` is served by the shared API service in Replit preview and by `api/claude.js` when deployed directly to Vercel.
+- AI requests need a funded Anthropic account; offline fallbacks are intentional and should remain available.
 
 ## Pointers
 
